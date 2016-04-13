@@ -6,45 +6,45 @@ import (
 
 func main() {
 
-	mewtwo := species{"Mewtwo", psychic, 150, []transform{}}
+	mewtwo := species{"Mewtwo", psychic, 150, []transform{}, []moveLevel{}}
 
 	fmt.Println(mewtwo)
 
-	flareon := species{"Flareon", fire, 136, []transform{}}
-	jolteon := species{"Jolteon", electric, 135, []transform{}}
-	vaporeon := species{"Vaporeon", water, 134, []transform{}}
+	flareon := species{"Flareon", fire, 136, []transform{}, []moveLevel{}}
+	jolteon := species{"Jolteon", electric, 135, []transform{}, []moveLevel{}}
+	vaporeon := species{"Vaporeon", water, 134, []transform{}, []moveLevel{}}
 	eevee := species{"Eevee", normal, 133, []transform{
 		transformByStone(waterStone, &vaporeon),
 		transformByStone(thunderStone, &jolteon),
-		transformByStone(fireStone, &flareon)}}
+		transformByStone(fireStone, &flareon)}, []moveLevel{}}
 
 	fmt.Println(eevee)
 
-	weezing := species{"Weezing", poison, 110, []transform{}}
+	weezing := species{"Weezing", poison, 110, []transform{}, []moveLevel{}}
 	koffing := species{"Koffing", poison, 109, []transform{
-		transformByLevel(35, &weezing)}}
+		transformByLevel(35, &weezing)}, []moveLevel{}}
 
 	fmt.Println(koffing)
 
-	cloyster := species{"Cloyster", water | ice, 91, []transform{}}
+	cloyster := species{"Cloyster", water | ice, 91, []transform{}, []moveLevel{}}
 	shelder := species{"Shelder", water, 90, []transform{
-		transformByStone(waterStone, &cloyster)}}
+		transformByStone(waterStone, &cloyster)}, []moveLevel{}}
 
 	fmt.Println(shelder)
 
-	alakazam := species{"Alakazam", psychic, 65, []transform{}}
+	alakazam := species{"Alakazam", psychic, 65, []transform{}, []moveLevel{}}
 	kadabra := species{"Kadabra", psychic, 64, []transform{
-		transformByTrade(&alakazam)}}
+		transformByTrade(&alakazam)}, []moveLevel{}}
 	abra := species{"Abra", psychic, 63, []transform{
-		transformByLevel(16, &kadabra)}}
+		transformByLevel(16, &kadabra)}, []moveLevel{}}
 
 	fmt.Println(abra)
 
-	vileplume := species{"Vileplume", poison | grass, 45, []transform{}}
+	vileplume := species{"Vileplume", poison | grass, 45, []transform{}, []moveLevel{}}
 	gloom := species{"Gloom", poison | grass, 44, []transform{
-		transformByStone(leafStone, &vileplume)}}
+		transformByStone(leafStone, &vileplume)}, []moveLevel{}}
 	oddish := species{"Oddish", poison | grass, 43, []transform{
-		transformByLevel(21, &gloom)}}
+		transformByLevel(21, &gloom)}, []moveLevel{}}
 	nuptup := specimen{"Nuptup", &vileplume, 35, noStatus, 90, 90, 143, 40, 20}
 
 	fmt.Println(gloom)
@@ -52,11 +52,11 @@ func main() {
 	fmt.Println(nuptup.species)
 	fmt.Println(nuptup)
 
-	venusaur := species{"Venusaur", grass | poison, 3, []transform{}}
+	venusaur := species{"Venusaur", grass | poison, 3, []transform{}, []moveLevel{}}
 	ivysaur := species{"Ivysaur", grass | poison, 2, []transform{
-		transformByLevel(32, &venusaur)}}
+		transformByLevel(32, &venusaur)}, []moveLevel{}}
 	blubasaur := species{"Bulbasaur", grass | poison, 1, []transform{
-		transformByLevel(16, &ivysaur)}}
+		transformByLevel(16, &ivysaur)}, []moveLevel{}}
 
 	fmt.Println(blubasaur)
 }
@@ -131,11 +131,26 @@ func transformByTrade(transformsInto *species) transform {
 	return transform{byTrade, 0, fireStone, transformsInto}
 }
 
+type move struct {
+	name     string
+	moveType speciesType
+	ppMax    uint
+	accuracy uint // 0 - 100
+	power    uint
+	//effect, effectPropibility
+}
+
+type moveLevel struct {
+	move  move
+	level uint
+}
+
 type species struct {
 	name       string
 	types      speciesType
 	number     uint
 	transforms []transform
+	schedule   []moveLevel
 }
 
 type specimen struct {
