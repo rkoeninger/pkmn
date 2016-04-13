@@ -6,6 +6,16 @@ import (
 
 func main() {
 
+	tackle := move{"Tackle", normal}
+	growl := move{"Growl", normal}
+	leechSeed := move{"Leech Seed", grass}
+	vineWhip := move{"Vine Whip", grass}
+	poisonPowder := move{"Poison Powder", poison}
+	razorLeaf := move{"Razor Leaf", grass}
+	growth := move{"Growth", normal}
+	sleepPowder := move{"Sleep Powder", grass}
+	solarBeam := move{"Solar Beam", grass}
+
 	mewtwo := species{"Mewtwo", psychic, 150, []transform{}, []moveLevel{}}
 
 	fmt.Println(mewtwo)
@@ -56,7 +66,16 @@ func main() {
 	ivysaur := species{"Ivysaur", grass | poison, 2, []transform{
 		transformByLevel(32, &venusaur)}, []moveLevel{}}
 	blubasaur := species{"Bulbasaur", grass | poison, 1, []transform{
-		transformByLevel(16, &ivysaur)}, []moveLevel{}}
+		transformByLevel(16, &ivysaur)}, []moveLevel{
+		moveLevel{tackle, 1},
+		moveLevel{growl, 1},
+		moveLevel{leechSeed, 7},
+		moveLevel{vineWhip, 13},
+		moveLevel{poisonPowder, 20},
+		moveLevel{razorLeaf, 27},
+		moveLevel{growth, 34},
+		moveLevel{sleepPowder, 41},
+		moveLevel{solarBeam, 48}}}
 
 	fmt.Println(blubasaur)
 }
@@ -134,9 +153,9 @@ func transformByTrade(transformsInto *species) transform {
 type move struct {
 	name     string
 	moveType speciesType
-	ppMax    uint
-	accuracy uint // 0 - 100
-	power    uint
+	//ppMax    uint
+	//accuracy uint // 0 - 100
+	//power    uint
 	//effect, effectPropibility
 }
 
