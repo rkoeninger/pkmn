@@ -3,7 +3,7 @@
 
 use std::fmt;
 
-enum SpeciesType {
+enum Element {
 	Normal,
 	Flying,
 	Grass,
@@ -47,7 +47,7 @@ enum StoneType {
 
 struct Move {
 	name: String,
-	type1: SpeciesType
+	type1: Element
 	//ppMax:    u32
 	//accuracy: u32 // 0 - 100
 	//power:    u32
@@ -63,8 +63,8 @@ struct Transform {
 struct Species {
 	index: u32,
 	name: String,
-	type1: SpeciesType,
-	type2: Option<SpeciesType>,
+	type1: Element,
+	type2: Option<Element>,
 	transforms: Vec<Transform>,
 	schedule: Vec<(u32, Move)>
 }
@@ -91,7 +91,7 @@ fn main() {
 	let mewtwo = Species {
 		index: 150,
 		name: "Mewtwo".to_string(),
-		type1: SpeciesType::Psychic,
+		type1: Element::Psychic,
 		type2: None,
 		transforms: vec![],
 		schedule: vec![]
