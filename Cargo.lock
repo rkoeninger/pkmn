@@ -1,4 +1,14 @@
 [root]
 name = "pkmn"
 version = "0.1.0"
+dependencies = [
+ "text_io 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
+[[package]]
+name = "text_io"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[metadata]
+"checksum text_io 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)" = "b75be161aa28cc0d3b17510330876d8a9c41a8351e93805fa84c2aa3ef71c19a"

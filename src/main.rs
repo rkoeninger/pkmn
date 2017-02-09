@@ -2,6 +2,7 @@
 #![allow(unused_variables)]
 
 use std::fmt;
+#[macro_use] extern crate text_io;
 
 enum Element {
 	Normal,
@@ -259,4 +260,10 @@ fn main() {
 	println!("{}", jolteon);
 	println!("{}", flareon);
 	println!("{}", mewtwo);
+
+	println!("You awake in your room.");
+	println!("You see a PC, an NES a door.");
+	println!("What do you want to do?");
+	let line: String = read!("{}\r\n");
+	println!("You want to go to the {}?", line);
 }
