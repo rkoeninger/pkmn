@@ -140,6 +140,15 @@ struct Specimen<'a> {
 	attack: u32
 }
 
+struct Room {
+	paths: Vec<Path>
+}
+
+struct Path {
+	from: Box<Room>,
+	to: Box<Room>
+}
+
 fn main() {
 	println!("You awake in your room.");
 	println!("You see a PC, an NES a door.");
