@@ -140,8 +140,13 @@ struct Specimen<'a> {
 	attack: u32
 }
 
+struct Thing {
+	name: &'static str
+}
+
 struct Room {
-	paths: Vec<Path>
+	paths: Vec<Path>,
+	things: Vec<Thing>
 }
 
 struct Path {
@@ -150,6 +155,9 @@ struct Path {
 }
 
 fn main() {
+	// user inputs either:
+	//   go <path>
+	//   look <thing>
 	println!("You awake in your room.");
 	println!("You see a PC, an NES a door.");
 	println!("What do you want to do?");
