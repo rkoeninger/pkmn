@@ -150,6 +150,36 @@ struct Room {
 	things: Vec<Thing>
 }
 
+enum ParseResult {
+	Fail,
+	Go(String),
+	Look(String),
+}
+
+fn parse_input(mut line: String) -> ParseResult {
+	if line.starts_with("go ") {
+		line = line["go ".len()..].to_string();
+
+		if line.starts_with("to ") {
+			line = line["to ".len()..].to_string();
+		}
+
+		return ParseResult::Go(line.to_string());
+	}
+
+	if line.starts_with("look ") {
+		line = line["look ".len()..].to_string();
+
+		if line.starts_with("at ") {
+			line = line["at ".len()..].to_string();
+		}
+
+		return ParseResult::Look(line.to_string());
+	}
+
+	ParseResult::Fail
+}
+
 fn main() {
 	let mut your_room = Room {
 		name: "your room",
@@ -179,11 +209,19 @@ fn main() {
 	// user inputs either:
 	//   go <path>
 	//   look <thing>
-	let line: String = read!("{}\r\n");
-	match line.as_str() {
-		"go your house" => println!("going downstairs"),
-		"look PC" => println!("looking at the PC"),
-		"look NES" => println!("looking at the NES"),
-		_ => println!("\"{}\"? That makes no sense!", line)
+	let line: String = read!("{}\r\n"); // TODO: this won't work on non-windows?
+	match parse_input(line) {
+		ParseResult::Go(room_name) => {
+			println!("Going to {}", room_name);
+		},
+		ParseResult::Look(thing_name) => {
+			println!("Looking at the {}", thing_name);
+		},
+		ParseResult::Fail => {
+			println!("That didn't make any sense.");
+			println!("Please respond in the form of");
+			println!("\t\"go $ROOM_NAME\"");
+			println!("\t\"look $THING_NAME\"");
+		}
 	}
 }
