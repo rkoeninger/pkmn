@@ -141,61 +141,48 @@ struct Specimen<'a> {
 }
 
 struct Thing {
-	name: &'static str
+	name: &'static str,
+	info: &'static str
 }
 
 struct Room {
 	name: &'static str,
-	paths: Vec<Room>,
+	paths: Vec<Box<Room>>,
 	things: Vec<Thing>
 }
 
 enum ParseResult {
+	Quit,
 	Fail,
 	Go(String),
 	Look(String),
 }
 
 fn parse_input(mut line: String) -> ParseResult {
-	if line.starts_with("go ") {
+	if line == "quit".to_string() {
+		ParseResult::Quit
+	} else if line.starts_with("go ") {
 		line = line["go ".len()..].to_string();
 
 		if line.starts_with("to ") {
 			line = line["to ".len()..].to_string();
 		}
 
-		return ParseResult::Go(line.to_string());
-	}
-
-	if line.starts_with("look ") {
+		ParseResult::Go(line.to_string())
+	} else if line.starts_with("look ") {
 		line = line["look ".len()..].to_string();
 
 		if line.starts_with("at ") {
 			line = line["at ".len()..].to_string();
 		}
 
-		return ParseResult::Look(line.to_string());
+		ParseResult::Look(line.to_string())
+	} else {
+		ParseResult::Fail
 	}
-
-	ParseResult::Fail
 }
 
-fn main() {
-	let mut your_room = Room {
-		name: "your room",
-		paths: vec![],
-		things: vec![
-			Thing { name: "PC" },
-			Thing { name: "NES" }
-		]
-	};
-	let your_house = Room {
-		name: "your house",
-		paths: vec![],
-		things: vec![]
-	};
-	your_room.paths.push(your_house);
-	let current = your_room;
+fn explore(current: &Room) {
 	println!("You awake in {}.", current.name);
 	println!("Paths:");
 	for room in current.paths.iter() {
@@ -206,22 +193,59 @@ fn main() {
 		println!("\t{}", thing.name);
 	}
 	println!("What do you want to do?");
-	// user inputs either:
-	//   go <path>
-	//   look <thing>
-	let line: String = read!("{}\r\n"); // TODO: this won't work on non-windows?
-	match parse_input(line) {
+	match parse_input(read!("{}\r\n")) { // TODO: this won't work on non-windows?
 		ParseResult::Go(room_name) => {
-			println!("Going to {}", room_name);
+			println!("Going to {}...", room_name);
+			let index = current
+				.paths
+				.iter()
+				.position(|r| r.name.to_string() == room_name)
+				.unwrap();
+			let room = current.paths.iter().nth(index).unwrap();
+			explore(room);
 		},
 		ParseResult::Look(thing_name) => {
-			println!("Looking at the {}", thing_name);
+			println!("Looking at the {}...", thing_name);
+			let index = current
+				.things
+				.iter()
+				.position(|r| r.name.to_string() == thing_name)
+				.unwrap();
+			let thing = current.things.iter().nth(index).unwrap();
+			println!("{}", thing.info);
+			explore(current);
 		},
 		ParseResult::Fail => {
 			println!("That didn't make any sense.");
 			println!("Please respond in the form of");
 			println!("\t\"go $ROOM_NAME\"");
 			println!("\t\"look $THING_NAME\"");
+			explore(current);
+		},
+		ParseResult::Quit => {
+			println!("Goodbye!");
 		}
 	}
+}
+
+fn main() {
+	let mut your_room = Room {
+		name: "your room",
+		paths: vec![],
+		things: vec![
+			Thing { name: "PC", info: "Looks like it's off." },
+			Thing { name: "NES", info: "These were really popular back in the day." }
+		]
+	};
+	let your_house = Room {
+		name: "your house",
+		paths: vec![],
+		things: vec![
+			Thing { name: "Mom", info: "Good luck out there!" }
+		]
+	};
+	your_room.paths.push(Box::new(your_house));
+	// TODO: make circular reference
+	// your_house.paths.push(Box::new(your_room));
+	explore(&your_room);
 }
