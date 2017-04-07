@@ -145,22 +145,45 @@ struct Thing {
 }
 
 struct Room {
-	paths: Vec<Path>,
+	name: &'static str,
+	paths: Vec<Room>,
 	things: Vec<Thing>
 }
 
-struct Path {
-	from: Box<Room>,
-	to: Box<Room>
-}
-
 fn main() {
+	let mut your_room = Room {
+		name: "your room",
+		paths: vec![],
+		things: vec![
+			Thing { name: "PC" },
+			Thing { name: "NES" }
+		]
+	};
+	let your_house = Room {
+		name: "your house",
+		paths: vec![],
+		things: vec![]
+	};
+	your_room.paths.push(your_house);
+	let current = your_room;
+	println!("You awake in {}.", current.name);
+	println!("Paths:");
+	for room in current.paths.iter() {
+		println!("\t{}", room.name);
+	}
+	println!("Things:");
+	for thing in current.things.iter() {
+		println!("\t{}", thing.name);
+	}
+	println!("What do you want to do?");
 	// user inputs either:
 	//   go <path>
 	//   look <thing>
-	println!("You awake in your room.");
-	println!("You see a PC, an NES a door.");
-	println!("What do you want to do?");
 	let line: String = read!("{}\r\n");
-	println!("You want to go to the {}?", line);
+	match line.as_str() {
+		"go your house" => println!("going downstairs"),
+		"look PC" => println!("looking at the PC"),
+		"look NES" => println!("looking at the NES"),
+		_ => println!("\"{}\"? That makes no sense!", line)
+	}
 }
