@@ -196,24 +196,38 @@ unsafe fn explore(current: *const Room, first: bool) {
 	match parse_input(read!("{}\r\n")) { // TODO: this won't work on non-windows?
 		ParseResult::Go(room_name) => {
 			println!("Going to {}...", room_name);
-			let index = (*current)
+			let index_option = (*current)
 				.paths
 				.iter()
-				.position(|r| (**r).name.to_string() == room_name)
-				.unwrap();
-			let room = (*current).paths.iter().nth(index).unwrap();
-			explore(*room, false);
+				.position(|r| (**r).name.to_string() == room_name);
+			match index_option {
+				Some(index) => {
+					let room = (*current).paths.iter().nth(index).unwrap();
+					explore(*room, false)
+				},
+				None => {
+					println!("I don't know where \"{}\" is", room_name);
+					explore(current, false)
+				}
+			};
 		},
 		ParseResult::Look(thing_name) => {
 			println!("Looking at the {}...", thing_name);
-			let index = (*current)
+			let index_option = (*current)
 				.things
 				.iter()
-				.position(|t| t.name.to_string() == thing_name)
-				.unwrap();
-			let thing = (*current).things.iter().nth(index).unwrap();
-			println!("{}", thing.info);
-			explore(current, false);
+				.position(|t| t.name.to_string() == thing_name);
+			match index_option {
+				Some(index) => {
+					let thing = (*current).things.iter().nth(index).unwrap();
+					println!("{}", thing.info);
+					explore(current, false);
+				},
+				None => {
+					println!("I don't know what \"{}\" is", thing_name);
+					explore(current, false);
+				}
+			};
 		},
 		ParseResult::Fail => {
 			println!("That didn't make any sense.");
