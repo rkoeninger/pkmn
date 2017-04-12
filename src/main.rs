@@ -159,6 +159,7 @@ enum ParseResult {
 }
 
 fn parse_input(mut line: String) -> ParseResult {
+	line = line.trim().to_string();
 	if line == "quit".to_string() {
 		ParseResult::Quit
 	} else if line.starts_with("go ") {
@@ -183,7 +184,7 @@ fn parse_input(mut line: String) -> ParseResult {
 }
 
 unsafe fn explore(current: *const Room, first: bool) {
-	println!("You {} in {}.", if first { "awake" } else { "in" }, (*current).name);
+	println!("You {} in {}.", if first { "awake" } else { "are" }, (*current).name);
 	println!("Paths:");
 	for room in (*current).paths.iter() {
 		println!("\t{}", (**room).name);
@@ -193,7 +194,7 @@ unsafe fn explore(current: *const Room, first: bool) {
 		println!("\t{}", thing.name);
 	}
 	println!("What do you want to do?");
-	match parse_input(read!("{}\r\n")) { // TODO: this won't work on non-windows?
+	match parse_input(read!("{}\n")) { // TODO: this won't work on non-windows?
 		ParseResult::Go(room_name) => {
 			println!("Going to {}...", room_name);
 			let index_option = (*current)
